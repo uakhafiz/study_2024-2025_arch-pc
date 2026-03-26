@@ -1,0 +1,53 @@
+; lab10-1.asm
+; Программа для записи строки в файл readme.txt
+; Студент: Ахтар Хафиз Умер
+; Группа: НКАБД-07-25
+
+%include 'in_out.asm'
+
+SECTION .data
+    filename db 'readme.txt', 0h    ; Имя файла
+    msg db 'Введите строку для записи в файл: ', 0h
+
+SECTION .bss
+    contents resb 255               ; Буфер для вводимой строки
+
+SECTION .text
+    GLOBAL _start
+
+_start:
+    ; --- Вывод сообщения
+    mov eax, msg
+    call sprint
+
+    ; --- Ввод строки с клавиатуры
+    mov ecx, contents
+    mov edx, 255
+    call sread
+
+    ; --- Открытие файла для записи (sys_open)
+    mov ecx, 2                      ; O_RDWR (открытие для записи)
+    mov ebx, filename
+    mov eax, 5
+    int 80h
+
+    ; --- Сохранение дескриптора файла
+    mov esi, eax
+
+    ; --- Вычисление длины введенной строки
+    mov eax, contents
+    call slen
+
+    ; --- Запись в файл (sys_write)
+    mov edx, eax
+    mov ecx, contents
+    mov ebx, esi
+    mov eax, 4
+    int 80h
+
+    ; --- Закрытие файла (sys_close)
+    mov ebx, esi
+    mov eax, 6
+    int 80h
+
+    call quit
