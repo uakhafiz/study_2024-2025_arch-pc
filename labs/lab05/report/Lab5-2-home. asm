@@ -1,0 +1,27 @@
+; lab5-2-home.asm
+; Модифицированная программа с использованием in_out.asm
+; Выводит приглашение, читает строку и выводит её
+
+%include 'in_out.asm'
+
+SECTION .data
+    msg: DB 'Введите строку: ',0
+
+SECTION .bss
+    buf: RESB 80
+
+SECTION .text
+    GLOBAL _start
+
+_start:
+    mov eax, msg
+    call sprint
+
+    mov ecx, buf
+    mov edx, 80
+    call sread
+
+    mov eax, buf
+    call sprint
+
+    call quit
