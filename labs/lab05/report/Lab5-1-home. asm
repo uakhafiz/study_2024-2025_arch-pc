@@ -1,0 +1,41 @@
+; lab5-1-home.asm
+; Модифицированная программа (без in_out.asm)
+; Выводит приглашение, читает строку и выводит её
+
+SECTION .data
+    msg: DB 'Введите строку: ',10
+    msgLen: EQU $-msg
+
+SECTION .bss
+    buf: RESB 80
+    bufLen: EQU $-buf
+
+SECTION .text
+    GLOBAL _start
+
+_start:
+    ; Вывод приглашения
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, msg
+    mov edx, msgLen
+    int 80h
+
+    ; Чтение строки
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, buf
+    mov edx, bufLen
+    int 80h
+
+    ; Вывод введённой строки
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, buf
+    mov edx, bufLen
+    int 80h
+
+    ; Завершение программы
+    mov eax, 1
+    mov ebx, 0
+    int 80h
